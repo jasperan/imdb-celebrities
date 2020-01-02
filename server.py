@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 import find_beautifulsoup
 
 @app.route('/imdb')
