@@ -22,7 +22,7 @@ def execute(driver, url):
 
 	return actors_urls
 
-def main(day='11', month='12', year='1996'):
+def main(mode='default', day='11', month='12', year='1996'):
 
 	url = 'https://www.imdb.com/search/name/?birth_monthday={}-{}&birth_year={}'.format(
 		str(month),
