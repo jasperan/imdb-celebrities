@@ -65,7 +65,7 @@ def bruteforce(iteration):
 	# print(soup.prettify())
 	obj = soup.find_all('span', class_='itemprop')
 
-	if len(obj) == 0:
+	if not obj:
 		print('Iteration {} did not match any results.'.format(correct_number))
 		return
 
