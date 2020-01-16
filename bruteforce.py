@@ -35,7 +35,7 @@ def initialize_db():
 
 
 def call_db(connection, data):
-	sql = "INSERT INTO actors values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', {}) * from aa;".format(
+	sql = "INSERT INTO actors values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', {});".format(
 		data.get('url'),
 		data.get('name'),
 		data.get('knownfor_1'),
