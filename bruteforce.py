@@ -53,7 +53,7 @@ def call_db(connection, data):
 		for i in result:
 			print('Row: %s' % i)
 	except:
-		continue # Means that the values were already inserted
+		return # Means that the values were already inserted
 
 
 def destroy_session(connection):
