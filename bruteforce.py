@@ -140,12 +140,13 @@ def bruteforce(iteration):
 				i,
 				len(obj)-1)
 			)
-
+	ranking = str()
 	obj = soup.find(id='meterRank')
 	if obj.string == 'SEE RANK':
 		obj = 'Below Rank 5000'
 	else:
 		obj = obj.string
+	ranking = obj
 	print('MeterRank: {}'.format(
 		obj))
 
@@ -155,9 +156,9 @@ def bruteforce(iteration):
 	for i in range(len(knownfor_list)):
 		prepare_data['knownfor_{}'.format(i+1)] = knownfor_list[i]
 
+	prepare_data['rank'] = ranking
 	# TODO
 	prepare_data['birthday'] = 'TODO'
-	prepare_data['rank'] = 'TODO'
 	for i in range(3):
 		prepare_data['famous_title_{}'.format(i+1)] = 'TODO'
 	prepare_data['alive'] = -1
