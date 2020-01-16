@@ -2,6 +2,63 @@ from bs4 import BeautifulSoup
 from sys import exit, argv
 import requests
 import time
+from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
+
+
+def initialize_db():
+
+	ADDRESS = '127.0.0.1' #'belainstance-20190506-1152'  
+	PORT = '3306'
+	USERNAME = 'root'
+	PASSWORD = 'p/Me8*Aq'
+	# Old user:pass from old machine's database.
+	# POSTGRES_USERNAME = 'bbvabe'     
+	# POSTGRES_PASSWORD = 'alvaro$$2019' 
+	DBNAME = 'wraith'
+
+	# A long string that contains the necessary Postgres login information
+	postgres_str = ('mysql://{username}:{password}@{ipaddress}:{port}/{dbname}'
+	                .format(username=USERNAME, 
+	                        password=PASSWORD,
+	                        ipaddress=ADDRESS,
+	                        port=PORT,
+	                        dbname=DBNAME))
+
+	# Create the connection
+	
+	cnx = create_engine(postgres_str)
+	connection = cnx.connect()
+
+		
+	return connection
+
+
+def call_db(connection, data):
+	sql = "INSERT INTO actors values('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', {}) * from aa;".format(
+		data.get('url'),
+		data.get('name'),
+		data.get('knownfor_1'),
+		data.get('knownfor_2'),
+		data.get('knownfor_3'),
+		data.get('birthday'),
+		data.get('rank'),
+		data.get('famous_title_1'),
+		data.get('famous_title_2'),
+		data.get('famous_title_3'),
+		data.get('alive')
+	)
+	try:
+		result = connection.execute(sql)
+		for i in result:
+			print('Row: %s' % i)
+	except:
+		continue # Means that the values were already inserted
+
+
+def destroy_session(connection):
+	connection.close()
+
 
 def parse_people(url):
 	response = requests.get(url)
@@ -69,11 +126,16 @@ def bruteforce(iteration):
 		print('Iteration {} did not match any results.'.format(correct_number))
 		return
 
+	actor_name = str()
+	knownfor_list = list()
+
 	for i in range(len(obj)):
 		iteration = obj[i].string.lstrip('\n').rstrip('\n')
 		if i == 0:
+			actor_name = iteration
 			print('Actor Name: {}'.format(iteration))
 		else:
+			knownfor_list.append(iteration)
 			print('Known For: {} ({}/{})'.format(iteration,
 				i,
 				len(obj)-1)
@@ -86,6 +148,25 @@ def bruteforce(iteration):
 		obj = obj.string
 	print('MeterRank: {}'.format(
 		obj))
+
+	prepare_data = dict()
+	prepare_data['url'] = url
+	prepare_data['name'] = actor_name
+	for i in range(len(knownfor_list)):
+		prepare_data['knownfor_{}'.format(i+1)] = knownfor_list[i]
+
+	# TODO
+	prepare_data['birthday'] = 'TODO'
+	prepare_data['rank'] = 'TODO'
+	for i in range(3):
+		prepare_data['famous_title_{}'.format(i+1)] = 'TODO'
+	prepare_data['alive'] = -1
+
+
+	connection = initialize_db()
+	call_db(connection, prepare_data)
+	destroy_session(connection)
+
 
 	'''
 	print('Found {} elements'.format(
